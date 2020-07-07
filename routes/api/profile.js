@@ -4,6 +4,7 @@ const auth = require('../../middleware/auth');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 const { check, validationResult } = require('express-validator');
+const { Error } = require('mongoose');
 
 
 router.get('/me', auth, async (req, res) => {
@@ -112,7 +113,7 @@ router.get('/user/:user_id', async (req, res) => {
 // @desc      Delete Profile , User  and Posts
 // @access    Private
 
-router.delete('/',auth, async (req, res) => {
+router.delete('/', auth, async (req, res) => {
   try {
    
     //Remove profile
@@ -129,4 +130,51 @@ router.delete('/',auth, async (req, res) => {
     res.status(500).send('Serve error');
   }
 });
+
+// @router    PUT api/profile/experience
+// @desc      Add Profile experience
+// @access    Private
+
+router.put(
+  '/experience',
+  [auth, [
+    check('title', 'Title is Required').not().isEmpty(),
+    check('company', 'company is Required').not().isEmpty(),
+    check('from', 'From Date is Required').not().isEmpty()
+  ]],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description
+    } = req.body
+    const newExp = {
+      title,
+      company,
+      from,
+      location,
+      to,
+      current,
+      description
+    }
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+      profile.experience.unshift(newExp);
+      await profile.save();
+      return res.json(profile)
+    } catch (error) {
+      console.error(error.message);
+      return res.status(500).json({ msg: 'Server Error' })
+    }
+  });
+
 module.exports = router;
