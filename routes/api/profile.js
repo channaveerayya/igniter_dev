@@ -33,7 +33,7 @@ router.post('/',
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    
+
     //Build profile object
     const profileFields = {};
     profileFields.user = req.user.id;
@@ -115,7 +115,7 @@ router.get('/user/:user_id', async (req, res) => {
 
 router.delete('/', auth, async (req, res) => {
   try {
-   
+
     //Remove profile
     await Profile.findOneAndRemove({ user: req.user.id });
 
@@ -176,5 +176,25 @@ router.put(
       return res.status(500).json({ msg: 'Server Error' })
     }
   });
+
+// @router    DELETE api/profile/experience/:exp_id
+// @desc      DELETE Profile experience
+// @access    Private
+
+router.delete('/experience/:exp_id', auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id });
+
+    //get remove index
+    const removeIndex = profile.experience.map(item => item.id)
+      .indexOf(req.params.exp_id);
+    profile.experience.splice(removeIndex, 1);
+    await profile.save();
+    res.json(profile);
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ msg: 'Server Error' })
+  }
+});
 
 module.exports = router;
