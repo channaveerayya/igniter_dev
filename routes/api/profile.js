@@ -107,4 +107,26 @@ router.get('/user/:user_id', async (req, res) => {
     res.status(500).send('Serve error');
   }
 });
+
+// @router    DELETE api/profile
+// @desc      Delete Profile , User  and Posts
+// @access    Private
+
+router.delete('/',auth, async (req, res) => {
+  try {
+   
+    //Remove profile
+    await Profile.findOneAndRemove({ user: req.user.id });
+
+    //Remove user
+    await User.findOneAndRemove({ _id: req.user.id });
+    return res.json({ msg: 'User Deleted' });
+  } catch (error) {
+    console.error(error.message);
+    if (error.kind == 'ObjectId') {
+      return res.status(400).json({ msg: "Profile not found" });
+    }
+    res.status(500).send('Serve error');
+  }
+});
 module.exports = router;
