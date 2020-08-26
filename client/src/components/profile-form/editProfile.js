@@ -1,9 +1,14 @@
-import React, { useState, Fragment } from "react"
+import React, { useState, useEffect, Fragment } from "react"
 import { Link, withRouter } from "react-router-dom"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
-import { createProfile } from "../../actions/profile"
-const CreateProfile = (props) => {
+import { createProfile, getCurrentProfile } from "../../actions/profile"
+const EditProfile = ({
+  profile: { profile, loading },
+  createProfile,
+  getCurrentProfile,
+  history,
+}) => {
   const [FormData, setFormData] = useState({
     company: "",
     website: "",
@@ -19,6 +24,25 @@ const CreateProfile = (props) => {
     facebook: "",
   })
   const [displaySocialInputs, toggleSocialInputs] = useState(false)
+  useEffect(() => {
+    getCurrentProfile()
+    setFormData({
+      company: loading || !profile.company ? "" : profile.company,
+      website: loading || !profile.website ? "" : profile.website,
+      location: loading || !profile.location ? "" : profile.location,
+      status: loading || !profile.status ? "" : profile.status,
+      status: loading || !profile.status ? "" : profile.status,
+      skills: loading || !profile.skills ? "" : profile.skills.join(","),
+      githubusername:
+        loading || !profile.githubusername ? "" : profile.githubusername,
+      bio: loading || !profile.bio ? "" : profile.bio,
+      twitter: loading || !profile.social ? "" : profile.social.twitter,
+      facebook: loading || !profile.social ? "" : profile.social.facebook,
+      linkedin: loading || !profile.social ? "" : profile.social.linkedin,
+      youtube: loading || !profile.social ? "" : profile.social.youtube,
+      instagram: loading || !profile.social ? "" : profile.social.instagram,
+    })
+  }, [loading])
   const {
     company,
     website,
@@ -39,7 +63,7 @@ const CreateProfile = (props) => {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    props.createProfile(FormData, props.history)
+    createProfile(FormData, history, true)
   }
   return (
     <Fragment>
@@ -214,8 +238,15 @@ const CreateProfile = (props) => {
     </Fragment>
   )
 }
-CreateProfile.prototype = {
+EditProfile.prototype = {
   createProfile: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
 }
+const mapStateToProps = (state) => ({
+  profile: state.profile,
+})
 
-export default connect(null, { createProfile })(withRouter(CreateProfile))
+export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
+  withRouter(EditProfile)
+)
