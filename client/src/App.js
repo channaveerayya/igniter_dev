@@ -6,6 +6,10 @@ import Landing from "./components/layout/Landing"
 import Register from "./components/Auth/Register"
 import Login from "./components/Auth/Login"
 import Alert from "./components/layout/alert"
+import CreateProfile from "./components/profile-form/createProfile"
+import EditProfile from "./components/profile-form/editProfile"
+import AddExperience from "./components/profile-form/addExperience"
+import AddEducation from "./components/profile-form/addEducation"
 import Dashboard from "./components/dashboard/dashboard"
 import PrivateRouting from "./components/routes/PrivateRouting"
 import { Provider } from "react-redux"
@@ -33,6 +37,26 @@ const App = () => {
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
               <PrivateRouting exact path="/dashboard" component={Dashboard} />
+              <PrivateRouting
+                exact
+                path="/create-profile"
+                component={CreateProfile}
+              />
+              <PrivateRouting
+                exact
+                path="/edit-profile"
+                component={EditProfile}
+              />
+              <PrivateRouting
+                exact
+                path="/add-experience"
+                component={AddExperience}
+              />
+              <PrivateRouting
+                exact
+                path="/add-education"
+                component={AddEducation}
+              />
             </Switch>
           </section>
         </Fragment>
