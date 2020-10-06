@@ -7,14 +7,14 @@ import ProfileItem from "./profile-item"
 const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
   useEffect(() => {
     getProfiles()
-  }, [])
+  }, [getProfiles])
   return (
     <Fragment>
       {loading ? (
         <Spinner />
       ) : (
         <Fragment>
-          <h1 className="large text-primary"></h1>
+          <h1 className="large text-primary">Developers</h1>
           <p className="lead">
             <i className="fab fa-connectdevelop"></i> Browse and connect with
             developers
