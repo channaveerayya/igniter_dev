@@ -3,6 +3,7 @@ import {
   POST_ERROR,
   UPDATE_LIKES,
   DELETE_POST,
+  ADD_POST,
 } from "../actions/types"
 const initState = { posts: [], post: null, loading: true, error: {} }
 
@@ -13,6 +14,12 @@ export default function (state = initState, action) {
       return {
         ...state,
         posts: payload,
+        loading: false,
+      }
+    case ADD_POST:
+      return {
+        ...state,
+        posts: [...state.posts, payload],
         loading: false,
       }
     case DELETE_POST:
@@ -31,7 +38,7 @@ export default function (state = initState, action) {
       return {
         ...state,
         posts: state.posts.map((post) =>
-          post._id === payload.id ? { ...post, likes: payload.likes } : post
+          post._id === payload.postId ? { ...post, likes: payload.likes } : post
         ),
         loading: false,
       }
