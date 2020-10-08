@@ -1,0 +1,6 @@
+{
+  "mongoURI": "mongodb+srv://channu:channu9980972009@igniterdev.fsu6a.mongodb.net/test?retryWrites=true&w=majority",
+  "jwtSecret": "MySecretToken",
+  "githubClientId": "42641d9f306fc2939458",
+  "githubSecret": "6ec7f6bf4f2ab53c9b257be2149c887ad19f99b7"
+}
